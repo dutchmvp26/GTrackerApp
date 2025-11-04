@@ -24,10 +24,14 @@
 
                 _repo.DeleteGame(gameId);
             }
-        
+        public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
+        {
+            return _repo.SearchGames(title, releaseYear, genre, platform, status);
+        }
 
 
-            public void AddGame(Game game)
+
+        public void AddGame(Game game)
             {
                 if (string.IsNullOrWhiteSpace(game.Title))
                     throw new ArgumentException("Game title cannot be empty");

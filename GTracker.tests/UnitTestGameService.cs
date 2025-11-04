@@ -1,5 +1,6 @@
-﻿using GTracker.Models;
-using BLL.Services;
+﻿using BLL.Services;
+using DAL.Interfaces;
+using GTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace GTracker.tests
         GameService gameService = new GameService(new GameRepositoryMock());
 
         [TestMethod]
+ 
         public void GetAllGames()
         {
             // Arrange

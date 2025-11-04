@@ -12,5 +12,8 @@ namespace DAL.Interfaces
         public List<Game> GetAllGames();  
         public void DeleteGame(int gameId);
         public void AddGame(Game game);
+
+        List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status);
+
     }
 }

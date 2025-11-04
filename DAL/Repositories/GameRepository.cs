@@ -47,7 +47,7 @@ namespace DAL.Repositories
                             AddedByUserID = reader["AddedByUserID"] != DBNull.Value
                                 ? Convert.ToInt32(reader["AddedByUserID"])
                                 : (int?)null,
-                            Notes = reader["Notes"]?.ToString() 
+                            Notes = reader["Notes"]?.ToString()
                         };
 
                         games.Add(game);
@@ -89,11 +89,77 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
                     cmd.Parameters.AddWithValue("@addedBy", (object?)game.AddedByUserID ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@notes", (object?)game.Notes ?? DBNull.Value); // 🆕 new field
+                    cmd.Parameters.AddWithValue("@notes", (object?)game.Notes ?? DBNull.Value); 
 
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+        public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
+        {
+            var games = new List<Game>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var query = "SELECT * FROM Game WHERE 1=1";
+
+                if (!string.IsNullOrWhiteSpace(title))
+                    query += " AND Title LIKE @title";
+
+                if (releaseYear.HasValue)
+                    query += " AND ReleaseYear = @releaseYear";
+
+                if (!string.IsNullOrWhiteSpace(genre))
+                    query += " AND Genre LIKE @genre";
+
+                if (!string.IsNullOrWhiteSpace(platform))
+                    query += " AND Platform LIKE @platform";
+
+                if (status.HasValue)
+                    query += " AND Status = @status";
+
+                using (var cmd = new SqlCommand(query, connection))
+                {
+                    if (!string.IsNullOrWhiteSpace(title))
+                        cmd.Parameters.AddWithValue("@title", $"%{title}%");
+
+                    if (releaseYear.HasValue)
+                        cmd.Parameters.AddWithValue("@releaseYear", releaseYear.Value);
+
+                    if (!string.IsNullOrWhiteSpace(genre))
+                        cmd.Parameters.AddWithValue("@genre", $"%{genre}%");
+
+                    if (!string.IsNullOrWhiteSpace(platform))
+                        cmd.Parameters.AddWithValue("@platform", $"%{platform}%");
+
+                    if (status.HasValue)
+                        cmd.Parameters.AddWithValue("@status", status.Value.ToString());
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var statusRaw = reader["Status"]?.ToString() ?? "";
+                            var parsedStatus = Enum.TryParse<GameStatus>(statusRaw, true, out var gameStatus)
+                                ? gameStatus : GameStatus.CurrentlyPlaying;
+
+                            games.Add(new Game
+                            {
+                                Id = (int)reader["Id"],
+                                Title = reader["Title"].ToString(),
+                                Genre = reader["Genre"].ToString(),
+                                Platform = reader["Platform"].ToString(),
+                                releaseYear = (int)reader["ReleaseYear"],
+                                Status = parsedStatus
+                            });
+                        }
+                    }
+                }
+            }
+
+            return games;
         }
     }
 }

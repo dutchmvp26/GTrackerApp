@@ -1,7 +1,8 @@
 ﻿using GTracker.Models;
-using BLL.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using BLL.Services;
+using System.Collections.Generic;
 
 namespace GTracker.Pages
 {
@@ -18,9 +19,36 @@ namespace GTracker.Pages
             _logger = logger;
         }
 
+        [BindProperty(SupportsGet = true)]
+        public string? Title { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int? ReleaseYear { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? Genre { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? Platform { get; set; }
+
+        // ✅ NEW: Filter by status
+        [BindProperty(SupportsGet = true)]
+        public GameStatus? Status { get; set; }
+
         public void OnGet()
         {
-            Games = _gameService.GetAllGames(); 
+            if (!string.IsNullOrWhiteSpace(Title) ||
+                ReleaseYear.HasValue ||
+                !string.IsNullOrWhiteSpace(Genre) ||
+                !string.IsNullOrWhiteSpace(Platform) ||
+                Status.HasValue)
+            {
+                Games = _gameService.SearchGames(Title, ReleaseYear, Genre, Platform, Status);
+            }
+            else
+            {
+                Games = _gameService.GetAllGames();
+            }
         }
     }
 }
