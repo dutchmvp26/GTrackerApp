@@ -1,0 +1,24 @@
+﻿@page "{id:int}"
+@model GTracker.Pages.DeleteModel
+@{
+    ViewData["Title"] = "Delete Game";
+}
+
+<h1>Delete Game</h1>
+
+@if (Model.GameToDelete != null)
+{
+    <div class="alert alert-warning">
+        <p>Are you sure you want to delete <strong>@Model.GameToDelete.Title</strong>?</p>
+        <p><em>This action cannot be undone.</em></p>
+    </div>
+
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-page="/Index" class="btn btn-secondary">Cancel</a>
+    </form>
+}
+else
+{
+    <p class="text-danger">Game not found.</p>
+}

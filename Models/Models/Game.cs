@@ -1,0 +1,34 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GTracker.Models
+{
+    public class Game
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Title is required")]
+        public string Title { get; set; } = "";
+
+        public int releaseYear { get; set; }
+
+        public string? Genre { get; set; }
+
+        public string? boxArtUrl { get; set; }
+
+        [Required(ErrorMessage = "Platform is required")]
+        public string Platform { get; set; } = "Unknown";
+
+        public GameStatus Status { get; set; } = GameStatus.CurrentlyPlaying;
+
+        public bool IsCustom { get; set; } = false;
+
+        public int? AddedByUserID { get; set; }
+
+        public User? AddedByUser { get; set; }
+
+        public string? Notes { get; set; }
+
+    }
+
+}
+

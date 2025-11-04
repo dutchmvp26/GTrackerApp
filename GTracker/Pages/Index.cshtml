@@ -1,0 +1,37 @@
+﻿@page
+@model GTracker.Pages.IndexModel
+@{
+    ViewData["Title"] = "Games";
+}
+
+<h1>Games</h1>
+
+<p><a asp-page="./Create">Add new game</a></p>
+@if (Model.Games != null && Model.Games.Count > 0)
+{
+    <table class="table">
+        <thead> ... </thead>
+        <tbody>
+            @foreach (var g in Model.Games)
+            {
+                <tr>
+                    <td>@g.Title</td>
+                    <td>@g.releaseYear</td>
+                    <td>@g.Genre</td>
+                    <td>@g.Platform</td>
+                    <td>@g.Status.GetDisplayName()</td>
+                    <td>
+                        <a asp-page="/View" asp-route-id="@g.Id" class="btn btn-sm btn-info">View Details</a>
+                        <a asp-page="/Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+
+    </table>
+}
+else
+{
+    <p>No games found in the database.</p>
+}

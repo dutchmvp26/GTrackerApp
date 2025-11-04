@@ -1,0 +1,51 @@
+﻿@page
+@model GTracker.Pages.CreateModel
+@{
+    ViewData["Title"] = "Add Game";
+}
+
+<h1>Add New Game</h1>
+
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label asp-for="NewGame.Title" class="form-label">Title</label>
+        <input asp-for="NewGame.Title" class="form-control" />
+        <span asp-validation-for="NewGame.Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewGame.Platform" class="form-label">Platform</label>
+        <input asp-for="NewGame.Platform" class="form-control" />
+        <span asp-validation-for="NewGame.Platform" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewGame.releaseYear" class="form-label">Release Year</label>
+        <input asp-for="NewGame.releaseYear" type="number" class="form-control" min="1950" max="2100" />
+        <span asp-validation-for="NewGame.releaseYear" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewGame.Genre" class="form-label">Genre</label>
+        <input asp-for="NewGame.Genre" class="form-control" />
+        <span asp-validation-for="NewGame.Genre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewGame.Status" class="form-label">Status</label>
+        <select asp-for="NewGame.Status" class="form-select" asp-items="Html.GetEnumSelectList<GTracker.Models.GameStatus>()"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewGame.Notes" class="form-label">Notes</label>
+        <textarea asp-for="NewGame.Notes" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="NewGame.Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Game</button>
+    <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
