@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    namespace LOG.Services
+    namespace BLL.Services
     {
         public class GameService
         {
@@ -24,6 +24,7 @@
 
                 _repo.DeleteGame(gameId);
             }
+        // balls balls big fat balls
 
 
             public void AddGame(Game game)

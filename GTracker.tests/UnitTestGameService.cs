@@ -1,5 +1,5 @@
 ﻿using GTracker.Models;
-using LOG.Services;
+using BLL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

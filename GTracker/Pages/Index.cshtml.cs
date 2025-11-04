@@ -1,5 +1,5 @@
 ﻿using GTracker.Models;
-using LOG.Services;
+using BLL.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
