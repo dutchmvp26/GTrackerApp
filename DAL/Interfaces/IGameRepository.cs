@@ -9,9 +9,12 @@ namespace DAL.Interfaces
 {
     public interface IGameRepository
     {
-        public List<Game> GetAllGames();  
+        public List<Game> GetAllGames();
+        Game? GetGameById(int id);
         public void DeleteGame(int gameId);
         public void AddGame(Game game);
+
+        public void UpdateGame(Game game);
 
         List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status);
 

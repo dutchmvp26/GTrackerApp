@@ -14,8 +14,13 @@
             {
                 _repo = repo;
             }
-
-            public List<Game> GetAllGames() => _repo.GetAllGames();
+        
+        public Game? GetGameById(int id)                // NEW
+        {
+            if (id <= 0) return null;
+            return _repo.GetGameById(id);
+        }
+        public List<Game> GetAllGames() => _repo.GetAllGames();
 
             public void DeleteGame(int gameId)
             {
@@ -41,5 +46,14 @@
 
                 _repo.AddGame(game);
             }
+
+        public void UpdateGame(Game game)             
+        {
+            if (game.Id <= 0) throw new ArgumentException("Invalid game ID.");
+            if (string.IsNullOrWhiteSpace(game.Title)) throw new ArgumentException("Title is required.");
+            if (string.IsNullOrWhiteSpace(game.Platform)) throw new ArgumentException("Platform is required.");
+
+            _repo.UpdateGame(game);
         }
+    }
     }

@@ -1,0 +1,69 @@
+﻿@page "{id:int}"
+@model GTracker.Pages.EditModel
+@{
+    ViewData["Title"] = "Edit Game";
+}
+
+<h1>Edit Game</h1>
+
+@if (Model.Game == null)
+{
+    <p class="text-danger">Game not found.</p>
+}
+else
+{
+    <form method="post">
+        <input type="hidden" asp-for="Game.Id" />
+
+        <div class="mb-3">
+            <label asp-for="Game.Title" class="form-label"></label>
+            <input asp-for="Game.Title" class="form-control" />
+            <span asp-validation-for="Game.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.releaseYear" class="form-label"></label>
+            <input asp-for="Game.releaseYear" class="form-control" type="number" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.Genre" class="form-label"></label>
+            <input asp-for="Game.Genre" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.boxArtUrl" class="form-label">Box Art URL</label>
+            <input asp-for="Game.boxArtUrl" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.Platform" class="form-label"></label>
+            <input asp-for="Game.Platform" class="form-control" />
+            <span asp-validation-for="Game.Platform" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.Status" class="form-label"></label>
+            <select asp-for="Game.Status" class="form-select"
+                    asp-items="Html.GetEnumSelectList<GTracker.Models.GameStatus>()">
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.IsCustom" class="form-label"></label>
+            <input asp-for="Game.IsCustom" class="form-check-input" type="checkbox" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Game.Notes" class="form-label"></label>
+            <textarea asp-for="Game.Notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-page="/Index" class="btn btn-secondary">Cancel</a>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

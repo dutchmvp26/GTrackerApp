@@ -57,6 +57,45 @@ namespace DAL.Repositories
 
             return games;
         }
+        public Game? GetGameById(int id)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand("SELECT * FROM Game WHERE Id = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read()) return null;
+
+                        var statusRaw = reader["Status"]?.ToString() ?? "";
+                        var status = Enum.TryParse<GameStatus>(statusRaw, true, out var parsedStatus)
+                            ? parsedStatus
+                            : GameStatus.CurrentlyPlaying;
+
+                        return new Game
+                        {
+                            Id = reader["Id"] != DBNull.Value ? Convert.ToInt32(reader["Id"]) : 0,
+                            Title = reader["Title"]?.ToString() ?? "(no title)",
+                            releaseYear = reader["ReleaseYear"] != DBNull.Value ? Convert.ToInt32(reader["ReleaseYear"]) : 0,
+                            Genre = reader["Genre"]?.ToString(),
+                            boxArtUrl = reader["BoxArt"]?.ToString(),
+                            Platform = reader["Platform"]?.ToString() ?? "Unknown",
+                            Status = status,
+                            IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
+                            AddedByUserID = reader["AddedByUserID"] != DBNull.Value
+                                ? Convert.ToInt32(reader["AddedByUserID"])
+                                : (int?)null,
+                            Notes = reader["Notes"]?.ToString()
+                        };
+                    }
+                }
+            }
+        }
+
         public void DeleteGame(int gameId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -90,6 +129,40 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
                     cmd.Parameters.AddWithValue("@addedBy", (object?)game.AddedByUserID ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@notes", (object?)game.Notes ?? DBNull.Value); 
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void UpdateGame(Game game)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand(@"
+                    UPDATE Game
+                    SET Title = @title,
+                        ReleaseYear = @year,
+                        Genre = @genre,
+                        BoxArt = @boxArt,
+                        Platform = @platform,
+                        Status = @status,
+                        IsCustom = @isCustom,
+                        AddedByUserID = @addedBy,
+                        Notes = @notes
+                    WHERE Id = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", game.Id);
+                    cmd.Parameters.AddWithValue("@title", game.Title);
+                    cmd.Parameters.AddWithValue("@year", game.releaseYear);
+                    cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@boxArt", (object?)game.boxArtUrl ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@status", game.Status.ToString());
+                    cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
+                    cmd.Parameters.AddWithValue("@addedBy", (object?)game.AddedByUserID ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@notes", (object?)game.Notes ?? DBNull.Value);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -155,6 +228,7 @@ namespace DAL.Repositories
                                 Status = parsedStatus
                             });
                         }
+
                     }
                 }
             }
