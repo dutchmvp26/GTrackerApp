@@ -15,7 +15,7 @@
                 _repo = repo;
             }
         
-        public Game? GetGameById(int id)                // NEW
+        public Game? GetGameById(int id)              
         {
             if (id <= 0) return null;
             return _repo.GetGameById(id);

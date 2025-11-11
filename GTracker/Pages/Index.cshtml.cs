@@ -31,13 +31,19 @@ namespace GTracker.Pages
         [BindProperty(SupportsGet = true)]
         public string? Platform { get; set; }
 
-        // ✅ NEW: Filter by status
+        // Filter by status
         [BindProperty(SupportsGet = true)]
         public GameStatus? Status { get; set; }
 
         public void OnGet()
         {
-            if (!string.IsNullOrWhiteSpace(Title) ||
+            var username = HttpContext.Session.GetString("Username");
+            if (username == null)
+            {
+                Response.Redirect("/Login");
+                return;
+            }
+                if (!string.IsNullOrWhiteSpace(Title) ||
                 ReleaseYear.HasValue ||
                 !string.IsNullOrWhiteSpace(Genre) ||
                 !string.IsNullOrWhiteSpace(Platform) ||

@@ -25,6 +25,15 @@ namespace GTracker.tests
             Notes = "Second test game"
         };
 
+       public Game? GetGameById(int id)
+        {
+            if (id == game.Id)
+            {
+                return game;
+            }
+            return null;
+        }
+
         public List<Game> GetAllGames()
         {
             return new List<Game>() { game };
@@ -32,18 +41,23 @@ namespace GTracker.tests
 
         public void DeleteGame(int gameId)
         {
-            
+            throw new NotImplementedException();
         }
 
         public void AddGame(Game game)
         {
-
+            throw new NotImplementedException();
         }
 
         public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {
             return new List<Game> { game };
 
+        }
+
+        public void UpdateGame(Game game)
+        {
+            throw new NotImplementedException();
         }
     }
 }

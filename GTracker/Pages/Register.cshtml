@@ -1,0 +1,26 @@
+﻿@page
+@model GTracker.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1>Register</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a asp-page="/Login">Login Instead</a>
+</form>
+
+<p class="text-danger">@Model.ErrorMessage</p>
+<p class="text-success">@Model.SuccessMessage</p>

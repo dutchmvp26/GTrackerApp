@@ -12,18 +12,27 @@ namespace GTracker
 
             // Add services to the container
             builder.Services.AddRazorPages();
-            
-    
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // how long session lasts
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; // required for GDPR compliance
+            }); 
+
             // Get the connection string manually
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            builder.Services.AddScoped<IGameRepository>(sp => new GameRepository(connectionString));
-            builder.Services.AddScoped<GameService>();
+            builder.Services.AddScoped<IGameRepository>(provider =>
+            new GameRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-      
-           
-                
+            builder.Services.AddScoped<GameService>();
+            builder.Services.AddScoped<IUserRepository>(provider =>
+            new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<AuthService>();
+
 
             var app = builder.Build();
 
@@ -40,6 +49,7 @@ namespace GTracker
             app.UseRouting();
             app.UseAuthorization();
 
+            app.UseSession();
             app.MapRazorPages();
             app.Run();
         }

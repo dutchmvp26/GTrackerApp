@@ -10,7 +10,7 @@ namespace DAL.Interfaces
     public interface IGameRepository
     {
         public List<Game> GetAllGames();
-        Game? GetGameById(int id);
+        public Game? GetGameById(int id);
         public void DeleteGame(int gameId);
         public void AddGame(Game game);
 

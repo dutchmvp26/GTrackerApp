@@ -21,7 +21,7 @@ namespace GTracker.Pages
 
         public void OnGet()
         {
-            // Optional: Set defaults if needed
+            // set defaults if needed
             NewGame.Status = GameStatus.CurrentlyPlaying;
         }
 
