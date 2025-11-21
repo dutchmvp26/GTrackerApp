@@ -57,6 +57,48 @@ namespace DAL.Repositories
 
             return games;
         }
+
+        public List<Game> GetGamesByUserId(int userId)
+        {
+            var games = new List<Game>();
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand("SELECT * FROM Game WHERE AddedByUserID = @uid", conn))
+                {
+                    cmd.Parameters.AddWithValue("@uid", userId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var statusRaw = reader["Status"]?.ToString() ?? "";
+                            var status = Enum.TryParse<GameStatus>(statusRaw, true, out var parsedStatus)
+                                ? parsedStatus
+                                : GameStatus.CurrentlyPlaying;
+
+                            games.Add(new Game
+                            {
+                                Id = (int)reader["Id"],
+                                Title = reader["Title"].ToString(),
+                                Platform = reader["Platform"].ToString(),
+                                releaseYear = (int)reader["ReleaseYear"],
+                                Genre = reader["Genre"].ToString(),
+                                Status = status,
+                                Notes = reader["Notes"].ToString(),
+                                AddedByUserID = userId
+                            });
+                        }
+                    }
+                }
+            }
+
+            return games;
+        }
+
+
         public Game? GetGameById(int id)
         {
             using (var conn = new SqlConnection(_connectionString))

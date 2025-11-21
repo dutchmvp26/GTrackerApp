@@ -49,6 +49,12 @@ namespace GTracker.tests
             throw new NotImplementedException();
         }
 
+        public List<Game> GetGamesByUserId(int userId)
+        {
+         throw new NotImplementedException();
+                
+        }
+
         public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {
             return new List<Game> { game };

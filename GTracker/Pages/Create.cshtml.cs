@@ -31,6 +31,13 @@ namespace GTracker.Pages
             {
                 return Page();
             }
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Login");
+
+            // assign owner:
+            NewGame.AddedByUserID = userId;
 
             try
             {

@@ -47,6 +47,12 @@
                 _repo.AddGame(game);
             }
 
+        public List<Game> GetGamesForUser(int userId)
+        {
+            return _repo.GetGamesByUserId(userId);
+        }
+
+
         public void UpdateGame(Game game)             
         {
             if (game.Id <= 0) throw new ArgumentException("Invalid game ID.");

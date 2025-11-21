@@ -16,7 +16,10 @@ namespace GTracker.Pages
         [BindProperty] public string Password { get; set; } = "";
         public string? ErrorMessage { get; set; }
 
-        public void OnGet() { }
+        public void OnGet() { 
+            HttpContext.Session.Clear();
+        }
+
 
         public IActionResult OnPost()
         {

@@ -31,6 +31,7 @@ namespace GTracker.Pages
         [BindProperty(SupportsGet = true)]
         public string? Platform { get; set; }
 
+        //
         // Filter by status
         [BindProperty(SupportsGet = true)]
         public GameStatus? Status { get; set; }
@@ -55,6 +56,15 @@ namespace GTracker.Pages
             {
                 Games = _gameService.GetAllGames();
             }
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                Response.Redirect("/Login");
+                return;
+            }
+
+            Games = _gameService.GetGamesForUser(userId.Value);
         }
     }
 }
