@@ -8,4 +8,6 @@ The user then fills in the Game Title, Platform, Release Year, Genre and notes (
 Searching games with the use of a filter is also possible. Users can fill in part of the title of a Game or fill in the Release Year, Genre, Platform and Status. Only the games that correspond to the filled in details will show up.
 From the list, Users can also easily delete, edit and view their game by clicking on the buttons with said names.
 
-If the User wishes to clear their session and Log Out, they can easily click on the "Log Out" button at the top.
+If the User wishes to clear their session and Log Out, they can easily click on the "Log Out" button at the top. The session gets cleared and the user has to log in/register again:
+<img width="1919" height="1016" alt="image" src="https://github.com/user-attachments/assets/58579b3d-3a4e-49ae-892c-dbe982ba57bd" />
+
