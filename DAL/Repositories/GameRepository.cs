@@ -152,6 +152,66 @@ namespace DAL.Repositories
             }
         }
 
+        public void AddRating(Rating rating)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    using (var cmd = new SqlCommand(@"
+                    INSERT INTO Rating (UserID, GameID, Stars)
+                    VALUES (@userid, @gameid, @stars)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@userid", rating.UserId);
+                        cmd.Parameters.AddWithValue("@gameid", rating.GameId);
+                        cmd.Parameters.AddWithValue("@stars", (int)rating.Stars);
+
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding rating: " + ex.Message);
+            }
+
+        }
+
+        public void UpdateRating(Rating rating)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    using (var cmd = new SqlCommand(@"
+                    UPDATE Rating
+                    SET UserID = @userid,
+                    GameID = @gameid,
+                    Stars = @stars
+                    WHERE Id = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@userid", rating.UserId);
+                        cmd.Parameters.AddWithValue("@gameid", rating.GameId);
+                        cmd.Parameters.AddWithValue("@stars", (int)rating.Stars);
+                        cmd.Parameters.AddWithValue("@id", rating.Id);
+
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding rating: " + ex.Message);
+            }
+
+        }
+
         public void AddGame(Game game)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

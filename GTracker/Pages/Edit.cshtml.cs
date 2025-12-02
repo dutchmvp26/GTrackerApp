@@ -43,6 +43,9 @@ namespace GTracker.Pages
 
             try
             {
+                int? userId = HttpContext.Session.GetInt32("UserId");
+                Game.AddedByUserID = userId;
+
                 _gameService.UpdateGame(Game);
                 return RedirectToPage("/Index");
             }

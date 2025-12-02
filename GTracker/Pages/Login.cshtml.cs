@@ -23,6 +23,12 @@ namespace GTracker.Pages
 
         public IActionResult OnPost()
         {
+            if (!ModelState.IsValid)
+            {
+                ErrorMessage = "Please fill in the correct details.";
+                return Page();
+            }
+
             var user = _authService.Login(Username, Password);
             if (user == null)
             {

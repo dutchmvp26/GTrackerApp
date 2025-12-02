@@ -14,6 +14,10 @@ namespace DAL.Interfaces
         public void DeleteGame(int gameId);
         public void AddGame(Game game);
 
+        public void AddRating(Rating rating);
+
+        public void UpdateRating(Rating rating);
+
         public void UpdateGame(Game game);
         List<Game> GetGamesByUserId(int userId);
 

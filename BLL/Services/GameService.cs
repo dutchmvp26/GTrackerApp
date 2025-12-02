@@ -34,6 +34,31 @@
             return _repo.SearchGames(title, releaseYear, genre, platform, status);
         }
 
+        public void AddRating(Rating rating)
+        {
+            try
+            {
+                _repo.AddRating(rating);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to add rating", ex);
+            }
+
+        }
+
+        public void UpdateRating(Rating rating)
+        {
+            try
+            {
+                _repo.UpdateRating(rating);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update rating", ex);
+            }
+
+        }
 
 
         public void AddGame(Game game)

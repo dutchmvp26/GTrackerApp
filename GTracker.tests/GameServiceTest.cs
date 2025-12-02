@@ -1,5 +1,4 @@
 ﻿using BLL.Services;
-using DAL.Interfaces;
 using GTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 namespace GTracker.tests
 {
     [TestClass]
-    public class UnitTestGameService
+    public class GameServiceTest
     {
         GameService gameService = new GameService(new GameRepositoryMock());
 

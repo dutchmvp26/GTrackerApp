@@ -1,0 +1,24 @@
+﻿@page
+@model GTracker.Pages.RatingModel
+@{
+    ViewData["Title"] = "Add Rating";
+}
+
+<h1>Add Rating</h1>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Rating.GameId" />   <!-- no manual value -->
+
+    <label>Stars:</label>
+    <select asp-for="Rating.Stars" class="form-control">
+        <option value="1">★☆☆☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="4">★★★★☆</option>
+        <option value="5">★★★★★</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary mt-3">Add Rating</button>
+</form>

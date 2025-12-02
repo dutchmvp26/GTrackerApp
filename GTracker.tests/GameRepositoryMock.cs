@@ -49,6 +49,11 @@ namespace GTracker.tests
             throw new NotImplementedException();
         }
 
+       public void AddRating(Rating rating)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Game> GetGamesByUserId(int userId)
         {
          throw new NotImplementedException();
