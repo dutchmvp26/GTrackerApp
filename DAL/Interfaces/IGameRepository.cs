@@ -23,7 +23,7 @@ namespace DAL.Interfaces
         public void UpdateGame(Game game);
         List<Game> GetGamesByUserId(int userId);
 
-        List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status);
+        List<Game> SearchGames(int userId, string? title, int? releaseYear, string? genre, string? platform, GameStatus? status);
 
     }
 }

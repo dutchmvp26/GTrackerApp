@@ -29,9 +29,9 @@
 
                 _repo.DeleteGame(gameId);
             }
-        public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
+        public List<Game> SearchGames(int userId, string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {
-            return _repo.SearchGames(title, releaseYear, genre, platform, status);
+            return _repo.SearchGames(userId, title, releaseYear, genre, platform, status);
         }
 
         public void AddRating(Rating rating)

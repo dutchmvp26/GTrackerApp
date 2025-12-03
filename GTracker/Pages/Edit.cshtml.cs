@@ -17,6 +17,8 @@ namespace GTracker.Pages
         [BindProperty]
         public Game? Game { get; set; }
 
+
+
         // Load existing game
         public IActionResult OnGet(int id)
         {
@@ -30,6 +32,8 @@ namespace GTracker.Pages
         // Save changes
         public IActionResult OnPost()
         {
+                ModelState.Remove("Game.AddedByUserID");
+                ModelState.Remove("Game.Stars");    
             if (Game == null)
             {
                 ModelState.AddModelError("", "No game provided.");

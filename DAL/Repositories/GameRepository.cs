@@ -335,7 +335,7 @@ namespace DAL.Repositories
                 }
             }
         }
-        public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
+        public List<Game> SearchGames(int userId, string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {
             var games = new List<Game>();
 
@@ -343,7 +343,7 @@ namespace DAL.Repositories
             {
                 connection.Open();
 
-                var query = "SELECT * FROM Game WHERE 1=1";
+                var query = "SELECT * FROM Game WHERE AddedByUserID = @uid";
 
                 if (!string.IsNullOrWhiteSpace(title))
                     query += " AND Title LIKE @title";
@@ -362,6 +362,8 @@ namespace DAL.Repositories
 
                 using (var cmd = new SqlCommand(query, connection))
                 {
+                    cmd.Parameters.AddWithValue("@uid", userId);
+
                     if (!string.IsNullOrWhiteSpace(title))
                         cmd.Parameters.AddWithValue("@title", $"%{title}%");
 

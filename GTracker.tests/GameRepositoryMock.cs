@@ -70,7 +70,7 @@ namespace GTracker.tests
                 
         }
 
-        public List<Game> SearchGames(string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
+        public List<Game> SearchGames(int userId, string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {
             return new List<Game> { game };
 

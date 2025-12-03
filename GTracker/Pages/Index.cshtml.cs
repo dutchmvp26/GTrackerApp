@@ -41,32 +41,23 @@
                 int? userId = HttpContext.Session.GetInt32("UserId");
           
                 var username = HttpContext.Session.GetString("Username");
-          
-                if (username == null)
-                {
+
+            if (username == null || userId == null)
+            {
                     Response.Redirect("/Login");
                     return;
                 }
 
-                Games = _gameService.GetGamesForUser(userId.Value);
+            Games = _gameService.GetGamesForUser(userId.Value);
 
-                if (!string.IsNullOrWhiteSpace(Title) ||
+            if (!string.IsNullOrWhiteSpace(Title) ||
                     ReleaseYear.HasValue ||
                     !string.IsNullOrWhiteSpace(Genre) ||
                     !string.IsNullOrWhiteSpace(Platform) ||
                     Status.HasValue)
                 {
-                    Games = _gameService.SearchGames(Title, ReleaseYear, Genre, Platform, Status);
+                    Games = _gameService.SearchGames(userId.Value, Title, ReleaseYear, Genre, Platform, Status);
                 }
-       
-           
-
-                if (userId == null)
-                {
-                    Response.Redirect("/Login");
-                    return;
-                }
-
             }
         }
     }
