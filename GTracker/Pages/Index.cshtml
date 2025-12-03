@@ -65,25 +65,52 @@
                 <th>Release Year</th>
                 <th>Genre</th>
                 <th>Platform</th>
+                <th>Rating</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var g in Model.Games)
-            {
-                <tr>
-                    <td>@g.Title</td>
-                    <td>@g.releaseYear</td>
-                    <td>@g.Genre</td>
-                    <td>@g.Platform</td>
-                    <td>@g.Status.GetDisplayName()</td>
+                @foreach (var g in Model.Games)
+                {
+                    <tr>
+                        <td>@g.Title</td>
+                        <td>@g.releaseYear</td>
+                        <td>@g.Genre</td>
+                        <td>@g.Platform</td>
+                    <td>
+                        @if (g.Stars != null)
+                        {
+                            // Filled stars
+                            for (int i = 0; i < g.Stars.Stars; i++)
+                            {
+                                @:<span style="color: gold; font-size: 1.2rem;">★</span>
+                            }
+
+                            // Empty stars
+                            for (int i = g.Stars.Stars; i < 5; i++)
+                            {
+                                @:<span style="color: lightgray; font-size: 1.2rem;">☆</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">No rating</span>
+                        }
+                    </td>
+                        <td>@g.Status.GetDisplayName()</td>
                     <td>
                         <a asp-page="/View" asp-route-id="@g.Id" class="btn btn-sm btn-info">View</a>
                         <a asp-page="/Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>
                         <a asp-page="/Edit" asp-route-id="@g.Id" class="btn btn-sm btn-warning">Edit</a>
                         <a asp-page="/Rating" asp-route-id="@g.Id" class="btn btn-sm btn-info">Add Rating</a>
-                        <a asp-page="/EditRating" asp-route-id="@g.Id" class="btn btn-sm btn-warning">Edit Rating</a>
+                        <a asp-page="/EditRating"
+                           asp-route-gameId="@g.Id"
+                           asp-route-ratingId="@(g.Stars?.Id)"
+                           class="btn btn-sm btn-warning">
+                            Edit Rating
+                        </a>
+
                     </td>
                 </tr>
             }

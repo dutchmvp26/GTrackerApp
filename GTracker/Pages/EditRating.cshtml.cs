@@ -24,20 +24,31 @@ namespace GTracker.Pages
         [BindProperty]
         public Rating Rating { get; set; } = new Rating();
 
-        public IActionResult OnGet(int id)
+
+
+        public IActionResult OnGet(int gameId, int? ratingId)
         {
+            
             var allGames = _gameService.GetAllGames();
-            Game = allGames.FirstOrDefault(g => g.Id == id);
+
+            if (!ratingId.HasValue)
+            {
+                return RedirectToPage("/Index");
+            }
+            Rating = _gameService.GetRatingById(ratingId.Value);
+
+            Game = allGames.FirstOrDefault(g => g.Id == gameId);
 
             if (Game == null)
             {
                 return RedirectToPage("/Index");
             }
-
-            Rating.GameId = id;
+            Rating = _gameService.GetRatingById(ratingId.Value);
 
             return Page();
+
         }
+
 
         public IActionResult OnPost()
         {

@@ -27,10 +27,6 @@ namespace GTracker.Pages
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
             int? userId = HttpContext.Session.GetInt32("UserId");
 
             if (userId == null)

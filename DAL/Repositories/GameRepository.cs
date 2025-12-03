@@ -66,7 +66,25 @@ namespace DAL.Repositories
             {
                 conn.Open();
 
-                using (var cmd = new SqlCommand("SELECT * FROM Game WHERE AddedByUserID = @uid", conn))
+                using (var cmd = new SqlCommand(@"
+            SELECT 
+                g.Id,
+                g.Title,
+                g.Platform,
+                g.ReleaseYear,
+                g.Genre,
+                g.Status,
+                g.Notes,
+                g.AddedByUserID,
+
+                -- Rating fields
+                r.Id AS RatingId,
+                r.Stars AS RatingValue
+
+            FROM Game g
+            LEFT JOIN Rating r ON g.Id = r.GameId
+            WHERE g.AddedByUserID = @uid
+        ", conn))
                 {
                     cmd.Parameters.AddWithValue("@uid", userId);
 
@@ -79,7 +97,8 @@ namespace DAL.Repositories
                                 ? parsedStatus
                                 : GameStatus.CurrentlyPlaying;
 
-                            games.Add(new Game
+                            // Build Game object
+                            var game = new Game
                             {
                                 Id = (int)reader["Id"],
                                 Title = reader["Title"].ToString(),
@@ -89,7 +108,24 @@ namespace DAL.Repositories
                                 Status = status,
                                 Notes = reader["Notes"].ToString(),
                                 AddedByUserID = userId
-                            });
+                            };
+
+                            // ⭐ Build Rating object (if found)
+                            if (reader["RatingId"] != DBNull.Value)
+                            {
+                                game.Stars = new Rating
+                                {
+                                    Id = Convert.ToInt32(reader["RatingId"]),
+                                    GameId = game.Id,
+                                    Stars = Convert.ToInt32(reader["RatingValue"])
+                                };
+                            }
+                            else
+                            {
+                                game.Stars = null; // No rating yet
+                            }
+
+                            games.Add(game);
                         }
                     }
                 }
@@ -132,6 +168,34 @@ namespace DAL.Repositories
                                 ? Convert.ToInt32(reader["AddedByUserID"])
                                 : (int?)null,
                             Notes = reader["Notes"]?.ToString()
+                        };
+
+                    }
+                }
+            }
+        }
+
+        public Rating? GetRatingById(int id)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand("SELECT * FROM Rating WHERE Id = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read()) return null;
+
+                 
+                        return new Rating
+                        {
+                            Id = reader["Id"] != DBNull.Value ? Convert.ToInt32(reader["Id"]) : 0,
+                            GameId = reader["GameId"] != DBNull.Value ? Convert.ToInt32(reader["GameId"]) : 0,
+                            UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : 0,
+                            Stars = reader["Stars"] != DBNull.Value ? Convert.ToInt32(reader["Stars"]) : 0,
                         };
                     }
                 }
@@ -195,10 +259,11 @@ namespace DAL.Repositories
                     Stars = @stars
                     WHERE Id = @id", conn))
                     {
+                        cmd.Parameters.AddWithValue("@id", rating.Id);
                         cmd.Parameters.AddWithValue("@userid", rating.UserId);
                         cmd.Parameters.AddWithValue("@gameid", rating.GameId);
                         cmd.Parameters.AddWithValue("@stars", (int)rating.Stars);
-                        cmd.Parameters.AddWithValue("@id", rating.Id);
+                       
 
 
                         cmd.ExecuteNonQuery();
@@ -210,7 +275,7 @@ namespace DAL.Repositories
                 throw new Exception("Error adding rating: " + ex.Message);
             }
 
-        }
+            }
 
         public void AddGame(Game game)
         {

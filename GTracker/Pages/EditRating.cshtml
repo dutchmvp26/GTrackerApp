@@ -9,7 +9,9 @@
 <form method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <input type="hidden" asp-for="Rating.GameId" />   <!-- no manual value -->
+    <input type="hidden" asp-for="Rating.Id" />
+    <input type="hidden" asp-for="Rating.GameId" />
+
 
     <label>Stars:</label>
     <select asp-for="Rating.Stars" class="form-control">

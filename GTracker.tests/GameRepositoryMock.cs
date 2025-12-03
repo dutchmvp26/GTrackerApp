@@ -25,7 +25,13 @@ namespace GTracker.tests
             Notes = "Second test game"
         };
 
-       public Game? GetGameById(int id)
+        public Rating? GetRatingById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Game? GetGameById(int id)
         {
             if (id == game.Id)
             {
@@ -45,6 +51,10 @@ namespace GTracker.tests
         }
 
         public void AddGame(Game game)
+        {
+            throw new NotImplementedException();
+        }
+        public void UpdateRating(Rating rating)
         {
             throw new NotImplementedException();
         }

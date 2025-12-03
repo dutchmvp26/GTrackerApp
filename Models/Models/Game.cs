@@ -28,6 +28,8 @@ namespace GTracker.Models
 
         public string? Notes { get; set; }
 
+        public Rating Stars { get; set; }
+
     }
 
 }

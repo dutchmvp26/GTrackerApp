@@ -16,6 +16,8 @@ namespace DAL.Interfaces
 
         public void AddRating(Rating rating);
 
+        public Rating? GetRatingById(int id);
+
         public void UpdateRating(Rating rating);
 
         public void UpdateGame(Game game);

@@ -60,6 +60,11 @@
 
         }
 
+        public Rating? GetRatingById(int id)
+        {
+            return _repo.GetRatingById(id);
+        }
+
 
         public void AddGame(Game game)
             {
