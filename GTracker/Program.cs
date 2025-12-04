@@ -1,6 +1,6 @@
-using DAL.Interfaces;
-using DAL.Repositories;
+using BLL.Interfaces;
 using BLL.Services;
+using DAL.Repositories;
 
 namespace GTracker
 {

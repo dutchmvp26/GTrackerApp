@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GTracker.Models;
 
-namespace DAL.Interfaces
+namespace BLL.Interfaces
 {
     public interface IUserRepository
     {
