@@ -18,6 +18,11 @@ namespace GTracker.Pages
 
         public IActionResult OnGet(int id)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Login");
+
             var allGames = _gameService.GetAllGames();
             Game = allGames.FirstOrDefault(g => g.Id == id);
 

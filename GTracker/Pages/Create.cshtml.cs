@@ -18,15 +18,21 @@ namespace GTracker.Pages
         [BindProperty]
         public Game NewGame { get; set; } = new Game();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Login");
             // set defaults if needed
             NewGame.Status = GameStatus.CurrentlyPlaying;
+
+            return Page();
         }
 
         public IActionResult OnPost()
         {
-            int? userId = HttpContext.Session.GetInt32("UserId");
+                int? userId = HttpContext.Session.GetInt32("UserId");
 
             if (userId == null)
                 return RedirectToPage("/Login");

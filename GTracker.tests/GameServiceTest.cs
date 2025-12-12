@@ -26,7 +26,6 @@ namespace GTracker.tests
                 Title = "Test Game 2",
                 releaseYear = 2020,
                 Genre = "Action",
-                boxArtUrl = "http://example.com/boxart2.jpg",
                 Platform = "PC",
                 Status = GameStatus.Wishlist,
                 IsCustom = false,
@@ -45,7 +44,6 @@ namespace GTracker.tests
             Assert.AreEqual(expectedGames[0].Title, actualGames[0].Title);
             Assert.AreEqual(expectedGames[0].releaseYear, actualGames[0].releaseYear);
             Assert.AreEqual(expectedGames[0].Genre, actualGames[0].Genre);
-            Assert.AreEqual(expectedGames[0].boxArtUrl, actualGames[0].boxArtUrl);
             Assert.AreEqual(expectedGames[0].Platform, actualGames[0].Platform);
             Assert.AreEqual(expectedGames[0].Status, actualGames[0].Status);
             Assert.AreEqual(expectedGames[0].IsCustom, actualGames[0].IsCustom);

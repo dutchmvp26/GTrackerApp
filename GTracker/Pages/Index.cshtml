@@ -71,13 +71,13 @@
             </tr>
         </thead>
         <tbody>
-                @foreach (var g in Model.Games)
-                {
-                    <tr>
-                        <td>@g.Title</td>
-                        <td>@g.releaseYear</td>
-                        <td>@g.Genre</td>
-                        <td>@g.Platform</td>
+            @foreach (var g in Model.Games)
+            {
+                <tr>
+                    <td>@g.Title</td>
+                    <td>@g.releaseYear</td>
+                    <td>@g.Genre</td>
+                    <td>@g.Platform</td>
                     <td>
                         @if (g.Stars != null)
                         {
@@ -98,26 +98,35 @@
                             <span class="text-muted">No rating</span>
                         }
                     </td>
-                        <td>@g.Status.GetDisplayName()</td>
+                    <td>@g.Status.GetDisplayName()</td>
                     <td>
                         <a asp-page="/View" asp-route-id="@g.Id" class="btn btn-sm btn-info">View</a>
                         <a asp-page="/Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>
                         <a asp-page="/Edit" asp-route-id="@g.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-page="/Rating" asp-route-id="@g.Id" class="btn btn-sm btn-info">Add Rating</a>
-                        <a asp-page="/EditRating"
-                           asp-route-gameId="@g.Id"
-                           asp-route-ratingId="@(g.Stars?.Id)"
-                           class="btn btn-sm btn-warning">
-                            Edit Rating
-                        </a>
+                        @{
+                            if (Model.HasRating) 
+                            {
 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                            }
+                            else{
+                                <a asp-page="/Rating" asp-route-id="@g.Id" class="btn btn-sm btn-info">Add Rating</a>
+
+                            }
+                            }
+                            <a asp-page="/EditRating"
+                               asp-route-gameId="@g.Id"
+                               asp-route-ratingId="@(g.Stars?.Id)"
+                               class="btn btn-sm btn-warning">
+                                Edit Rating
+                            </a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 else
-{
-    <p>No games have been added to the list yet, click on "Add new game" to add a new game!</p>
-}
+    {
+        <p>No games have been added to the list yet, click on "Add new game" to add a new game!</p>
+    }

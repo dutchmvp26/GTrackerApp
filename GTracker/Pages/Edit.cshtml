@@ -12,7 +12,7 @@
 }
 else
 {
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Game.Id" />
 
 
@@ -33,11 +33,6 @@ else
         </div>
 
         <div class="mb-3">
-            <label asp-for="Game.boxArtUrl" class="form-label">Box Art URL</label>
-            <input asp-for="Game.boxArtUrl" class="form-control" />
-        </div>
-
-        <div class="mb-3">
             <label asp-for="Game.Platform" class="form-label"></label>
             <input asp-for="Game.Platform" class="form-control" />
             <span asp-validation-for="Game.Platform" class="text-danger"></span>
@@ -51,9 +46,37 @@ else
         </div>
 
         <div class="mb-3">
-            <label asp-for="Game.IsCustom" class="form-label"></label>
-            <input asp-for="Game.IsCustom" class="form-check-input" type="checkbox" />
+            <label class="form-label">Box Art</label>
+
+            @if (Model.Game?.BoxArt != null)
+            {
+
+                <div class="small text-success mb-1">
+                    ✔ An image is already uploaded
+                </div>
+
+                <div class="mb-2">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Game.BoxArt)"
+                         class="img-fluid rounded shadow"
+                         style="max-width:400px;"
+                         alt="Current Box Art" />
+                    <div class="text-muted small">
+                        Current image (already saved)
+                    </div>
+                </div>
+            }
+
+            <input type="file"
+                   asp-for="UploadedImage"
+                   class="form-control" />
+
+            <small class="form-text text-muted">
+                Choose a new image only if you want to replace the current one
+            </small>
         </div>
+
+
+
 
         <div class="mb-3">
             <label asp-for="Game.Notes" class="form-label"></label>

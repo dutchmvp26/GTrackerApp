@@ -2,6 +2,7 @@ using BLL.Services;
 using GTracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Xml.Linq;
 
 namespace GTracker.Pages
 {
@@ -17,11 +18,19 @@ namespace GTracker.Pages
         [BindProperty]
         public Game? Game { get; set; }
 
+        [BindProperty]
+        public IFormFile UploadedImage { get; set; }
+
 
 
         // Load existing game
         public IActionResult OnGet(int id)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+                return RedirectToPage("/Login");
+
             Game = _gameService.GetGameById(id);
             if (Game == null)
                 return RedirectToPage("/Index");
@@ -29,8 +38,9 @@ namespace GTracker.Pages
             return Page();
         }
 
+
         // Save changes
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
                 ModelState.Remove("Game.AddedByUserID");
                 ModelState.Remove("Game.Stars");    
@@ -40,18 +50,22 @@ namespace GTracker.Pages
                 return Page();
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             try
             {
                 int? userId = HttpContext.Session.GetInt32("UserId");
                 Game.AddedByUserID = userId;
 
+                byte[] imageBytes = null;
+
+                if (UploadedImage != null && UploadedImage.Length > 0)
+                {
+                    using var ms = new MemoryStream();
+                    await UploadedImage.CopyToAsync(ms);
+                    Game.BoxArt = ms.ToArray();
+                }
                 _gameService.UpdateGame(Game);
                 return RedirectToPage("/Index");
+
             }
             catch (Exception ex)
             {

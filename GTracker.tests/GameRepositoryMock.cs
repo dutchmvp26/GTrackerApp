@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GTracker.Models;
 using Models;
-using DAL.Interfaces;
+using BLL.Interfaces;
 
 namespace GTracker.tests
 {
@@ -17,7 +17,6 @@ namespace GTracker.tests
             Title = "Test Game 2",
             releaseYear = 2020,
             Genre = "Action",
-            boxArtUrl = "http://example.com/boxart2.jpg",
             Platform = "PC",
             Status = GameStatus.Wishlist,
             IsCustom = false,

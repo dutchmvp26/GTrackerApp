@@ -1,9 +1,10 @@
-﻿using GTracker.Models;
+﻿using BLL.Interfaces;   
+using GTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using BLL.Interfaces;
+using System.Data;
 
 namespace DAL.Repositories
 {
@@ -40,7 +41,7 @@ namespace DAL.Repositories
                             Title = reader["Title"]?.ToString() ?? "(no title)",
                             releaseYear = reader["ReleaseYear"] != DBNull.Value ? Convert.ToInt32(reader["ReleaseYear"]) : 0,
                             Genre = reader["Genre"]?.ToString(),
-                            boxArtUrl = reader["BoxArt"]?.ToString(),
+                            BoxArt = reader["BoxArt"] != DBNull.Value ? (byte[])reader["BoxArt"] : null,
                             Platform = reader["Platform"]?.ToString() ?? "Unknown",
                             Status = status,
                             IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
@@ -160,7 +161,7 @@ namespace DAL.Repositories
                             Title = reader["Title"]?.ToString() ?? "(no title)",
                             releaseYear = reader["ReleaseYear"] != DBNull.Value ? Convert.ToInt32(reader["ReleaseYear"]) : 0,
                             Genre = reader["Genre"]?.ToString(),
-                            boxArtUrl = reader["BoxArt"]?.ToString(),
+                            BoxArt = reader["BoxArt"] != DBNull.Value ? (byte[])reader["BoxArt"] : null,
                             Platform = reader["Platform"]?.ToString() ?? "Unknown",
                             Status = status,
                             IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
@@ -290,7 +291,7 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@title", game.Title);
                     cmd.Parameters.AddWithValue("@year", game.releaseYear);
                     cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@boxArt", (object?)game.boxArtUrl ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@boxArt", (object?)game.BoxArt ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
@@ -324,7 +325,7 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@title", game.Title);
                     cmd.Parameters.AddWithValue("@year", game.releaseYear);
                     cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@boxArt", (object?)game.boxArtUrl ?? DBNull.Value);
+                    cmd.Parameters.Add("@boxArt", SqlDbType.VarBinary).Value = (object)game.BoxArt ?? DBNull.Value;
                     cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);

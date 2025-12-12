@@ -13,7 +13,7 @@ namespace GTracker.Models
 
         public string? Genre { get; set; }
 
-        public string? boxArtUrl { get; set; }
+        public byte[] BoxArt { get; set; }
 
         [Required(ErrorMessage = "Platform is required")]
         public string Platform { get; set; } = "Unknown";
