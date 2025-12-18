@@ -291,7 +291,7 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@title", game.Title);
                     cmd.Parameters.AddWithValue("@year", game.releaseYear);
                     cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@boxArt", (object?)game.BoxArt ?? DBNull.Value);
+                    cmd.Parameters.Add("@boxArt", SqlDbType.VarBinary).Value = (object)game.BoxArt ?? DBNull.Value;
                     cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);

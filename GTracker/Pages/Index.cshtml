@@ -103,22 +103,24 @@
                         <a asp-page="/View" asp-route-id="@g.Id" class="btn btn-sm btn-info">View</a>
                         <a asp-page="/Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>
                         <a asp-page="/Edit" asp-route-id="@g.Id" class="btn btn-sm btn-warning">Edit</a>
-                        @{
-                            if (Model.HasRating) 
-                            {
-
-                            }
-                            else{
-                                <a asp-page="/Rating" asp-route-id="@g.Id" class="btn btn-sm btn-info">Add Rating</a>
-
-                            }
-                            }
+                        @if (g.Stars == null)
+                        {
+                            <a asp-page="/Rating"
+                               asp-route-id="@g.Id"
+                               class="btn btn-success">
+                                Add Rating
+                            </a>
+                        }
+                        else
+                        {
                             <a asp-page="/EditRating"
                                asp-route-gameId="@g.Id"
-                               asp-route-ratingId="@(g.Stars?.Id)"
-                               class="btn btn-sm btn-warning">
+                               asp-route-ratingId="@g.Stars.Id"
+                               class="btn btn-warning">
                                 Edit Rating
                             </a>
+                        }
+
 
                         </td>
                     </tr>
@@ -130,3 +132,4 @@ else
     {
         <p>No games have been added to the list yet, click on "Add new game" to add a new game!</p>
     }
+

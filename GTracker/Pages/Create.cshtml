@@ -6,7 +6,8 @@
 
 <h1>Add New Game</h1>
 
-<form method="post" class="mt-4">
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="NewGame.Id" />
     <div class="mb-3">
         <label asp-for="NewGame.Title" class="form-label">Title</label>
         <input asp-for="NewGame.Title" class="form-control" />
@@ -35,6 +36,37 @@
         <label asp-for="NewGame.Status" class="form-label">Status</label>
         <select asp-for="NewGame.Status" class="form-select" asp-items="Html.GetEnumSelectList<GTracker.Models.GameStatus>()"></select>
     </div>
+     <div class="mb-3">
+            <label class="form-label">Box Art</label>
+
+            @if (Model.NewGame?.BoxArt != null)
+            {
+
+                <div class="small text-success mb-1">
+                    ✔ An image is already uploaded
+                </div>
+
+                <div class="mb-2">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.NewGame.BoxArt)"
+                         class="img-fluid rounded shadow"
+                         style="max-width:400px;"
+                         alt="Current Box Art" />
+                    <div class="text-muted small">
+                        Current image (already saved)
+                    </div>
+                </div>
+            }
+
+            <input type="file"
+                   asp-for="UploadedImage"
+                   class="form-control" />
+                    <span asp-validation-for="UploadedImage" class="text-danger"></span>
+
+            <small class="form-text text-muted">
+                Choose a new image only if you want to replace the current one
+            </small>
+        </div>
+
 
     <div class="mb-3">
         <label asp-for="NewGame.Notes" class="form-label">Notes</label>

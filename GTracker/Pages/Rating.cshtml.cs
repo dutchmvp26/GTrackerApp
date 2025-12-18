@@ -1,79 +1,78 @@
-using GTracker.Models;
-using BLL.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
+    using GTracker.Models;
+    using BLL.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.SignalR;
 
-namespace GTracker.Pages
-{
-    public class RatingModel : PageModel
+    namespace GTracker.Pages
     {
-
-        private readonly GameService _gameService;
-
-        public RatingModel(GameService gameService)
+        public class RatingModel : PageModel
         {
-            _gameService = gameService;
 
-        }
+            private readonly GameService _gameService;
+
+            public RatingModel(GameService gameService)
+            {
+                _gameService = gameService;
+
+            }
 
    
-        public Game? Game { get; set; }
+            public Game? Game { get; set; }
 
-        [BindProperty]
-        public Rating Rating { get; set; } = new Rating();
+            [BindProperty]
+            public Rating Rating { get; set; } = new Rating();
 
-        public IActionResult OnGet(int id)
-        {
-            int? userId = HttpContext.Session.GetInt32("UserId");
-
-            if (userId == null)
-                return RedirectToPage("/Login");
-
-            var allGames = _gameService.GetAllGames();
-            Game = allGames.FirstOrDefault(g => g.Id == id);
-
-            if (Game == null)
+            public IActionResult OnGet(int id)
             {
-                return RedirectToPage("/Index");
+                int? userId = HttpContext.Session.GetInt32("UserId");
+                if (userId == null)
+                {
+                    return RedirectToPage("/Index", new { error = "You must be logged in to add a rating." });
+                }
+
+                Game = _gameService.GetGameById(id);
+                if (Game == null)
+                {
+                    return RedirectToPage("/Index", new { error = $"Game not found for ID {id}." });
+                }
+
+                Rating.GameId = id;
+                return Page();
             }
 
-            Rating.GameId = id;
 
-            return Page();
-        }
+            public IActionResult OnPost()
+            {
+                if (!ModelState.IsValid)
+                    return Page();
 
-        public IActionResult OnPost()
-        {
-            if (!ModelState.IsValid)
-                return Page();
-
-            int? userId = HttpContext.Session.GetInt32("UserId");
+                int? userId = HttpContext.Session.GetInt32("UserId");
            
 
-            if (userId == null)
-            {
-                ModelState.AddModelError("", "You must be logged in to rate.");
-                return RedirectToPage("/Login");
-            }
-
-            Console.WriteLine($"GameId={Rating.GameId}, UserId={Rating.UserId}, Stars={Rating.Stars}");
-
-
-            // Assign user + game
-            Rating.UserId = userId.Value;
-
-            try
+                if (userId == null)
                 {
-                _gameService.AddRating(Rating);
-                return RedirectToPage("/Index");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", $"Error adding rating: {ex.Message}");
-                return Page();
-            }
+                    ModelState.AddModelError("", "You must be logged in to rate.");
+                    return RedirectToPage("/Login");
+                }
 
+                Console.WriteLine($"GameId={Rating.GameId}, UserId={Rating.UserId}, Stars={Rating.Stars}");
+
+
+                // Assign user + game
+                Rating.UserId = userId.Value;
+
+                try
+                    {
+                    _gameService.AddRating(Rating);
+                    return RedirectToPage("/Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Error adding rating: {ex.Message}");
+                    return Page();
+                }
+
+            }
         }
     }
-}

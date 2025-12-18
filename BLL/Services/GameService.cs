@@ -22,12 +22,12 @@
         }
         public List<Game> GetAllGames() => _repo.GetAllGames();
 
-            public void DeleteGame(int gameId)
-            {
-                if (gameId <= 0)
-                    throw new ArgumentException("Invalid game ID.");
+        public void DeleteGame(int gameId)
+        {
+            if (gameId <= 0)
+                throw new ArgumentException("Invalid game ID.");
 
-                _repo.DeleteGame(gameId);
+            _repo.DeleteGame(gameId);
             }
         public List<Game> SearchGames(int userId, string? title, int? releaseYear, string? genre, string? platform, GameStatus? status)
         {

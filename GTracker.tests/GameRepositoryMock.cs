@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GTracker.Models;
-using Models;
 using BLL.Interfaces;
 
 namespace GTracker.tests
@@ -29,6 +28,10 @@ namespace GTracker.tests
             throw new NotImplementedException();
         }
 
+        public bool DeleteGameCalled { get; private set; }
+        public int? DeletedGameId { get; private set; }
+
+
 
         public Game? GetGameById(int id)
         {
@@ -46,7 +49,8 @@ namespace GTracker.tests
 
         public void DeleteGame(int gameId)
         {
-            throw new NotImplementedException();
+            DeleteGameCalled = true;
+            DeletedGameId = gameId; ;
         }
 
         public void AddGame(Game game)
