@@ -13,6 +13,8 @@ namespace GTracker.Pages
 
         public List<Game> Games { get; set; } = new();
 
+        public Game? Game { get; set; }
+
         public IndexModel(GameService gameService, ILogger<IndexModel> logger)
         {
             _gameService = gameService;

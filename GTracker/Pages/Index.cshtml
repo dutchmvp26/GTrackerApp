@@ -58,26 +58,42 @@
 <!-- 🎮 GAME LIST -->
 @if (Model.Games != null && Model.Games.Count > 0)
 {
-    <table class="table table-striped table-bordered">
-        <thead class="table-light">
+    <table>
+        <thead class="table-dark">
             <tr>
+                <th style="width:80px">Box Art</th>
                 <th>Title</th>
-                <th>Release Year</th>
-                <th>Genre</th>
-                <th>Platform</th>
-                <th>Rating</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th style="width:110px">Year</th>
+                <th style="width:140px">Genre</th>
+                <th style="width:160px">Platform</th>
+                <th style="width:160px">Rating</th>
+                <th style="width:160px">Status</th>
+                <th style="width:310px">Actions</th>
             </tr>
         </thead>
         <tbody>
+
             @foreach (var g in Model.Games)
             {
                 <tr>
+                    <td style="width:90px">
+                        @if (g.BoxArt != null && g.BoxArt.Length > 0)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(g.BoxArt)"
+                                 class="img-thumbnail"
+                                 style="width:80px;height:80px;object-fit:cover;"
+                                 alt="Box Art" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </td>
                     <td>@g.Title</td>
                     <td>@g.releaseYear</td>
                     <td>@g.Genre</td>
                     <td>@g.Platform</td>
+
                     <td>
                         @if (g.Stars != null)
                         {
@@ -99,6 +115,7 @@
                         }
                     </td>
                     <td>@g.Status.GetDisplayName()</td>
+
                     <td>
                         <a asp-page="/View" asp-route-id="@g.Id" class="btn btn-sm btn-info">View</a>
                         <a asp-page="/Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>

@@ -77,6 +77,7 @@ namespace DAL.Repositories
                 g.Status,
                 g.Notes,
                 g.AddedByUserID,
+                g.BoxArt,   
 
                 -- Rating fields
                 r.Id AS RatingId,
@@ -108,7 +109,11 @@ namespace DAL.Repositories
                                 Genre = reader["Genre"].ToString(),
                                 Status = status,
                                 Notes = reader["Notes"].ToString(),
-                                AddedByUserID = userId
+                                AddedByUserID = userId,
+
+                                BoxArt = reader["BoxArt"] != DBNull.Value
+                                ? (byte[])reader["BoxArt"]
+                                : null
                             };
 
                             // ⭐ Build Rating object (if found)
