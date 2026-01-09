@@ -39,6 +39,9 @@ namespace GTracker.Pages
             // store session cookies
             HttpContext.Session.SetInt32("UserId", user.ID);
             HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetString("UserPFP", (user.PFP != null && user.PFP.Length > 0) ? Convert.ToBase64String(user.PFP) : ""
+);
+
 
             return RedirectToPage("/Index");
         }

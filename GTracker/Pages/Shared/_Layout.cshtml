@@ -4,35 +4,83 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GTracker</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GTracker.styles.css" asp-append-version="true" />
-
 </head>
+
 <body>
+    @inject BLL.Services.UserService UserService
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+            @{
+                var userId = Context.Session.GetInt32("UserId");
+                var userPfpBase64 = Context.Session.GetString("UserPFP");
+
+                // If logged in but session doesn't have PFP yet, load from DB once and cache it
+                if (userId != null && string.IsNullOrEmpty(userPfpBase64))
+                {
+                    var u = UserService.GetUserById(userId.Value);
+                    userPfpBase64 = (u?.PFP != null && u.PFP.Length > 0)
+                    ? Convert.ToBase64String(u.PFP)
+                    : "";
+
+                    Context.Session.SetString("UserPFP", userPfpBase64);
+                }
+            }
+
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">GTracker</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="mainNav">
+                    <!-- Left nav -->
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Login">Log Out</a>
+                            <a class="nav-link" asp-area="" asp-page="/Login">Log Out</a>
+                        </li>
+                    </ul>
+
+                    <!-- Right nav -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a asp-page="/Profile" class="nav-link p-0 d-flex align-items-center">
+                                @if (!string.IsNullOrEmpty(userPfpBase64))
+                                {
+                                    <img src="data:image/jpeg;base64,@userPfpBase64"
+                                         alt="Profile"
+                                         class="navbar-pfp" />
+                                }
+                                else
+                                {
+                                    <div class="navbar-pfp-placeholder" aria-label="No profile picture">
+                                        <svg class="navbar-pfp-svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                            <path d="M12 12c2.76 0 5-2.24 5-5S14.76 2 12 2 7 4.24 7 7s2.24 5 5 5z" />
+                                            <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z" />
+                                        </svg>
+                                    </div>
+                                }
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

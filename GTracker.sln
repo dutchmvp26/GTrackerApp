@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{05E14D93-0A2F-4A23-83A4-964B826C3A46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTracker.tests", "GTracker.tests\GTracker.tests.csproj", "{95C2B8B8-9530-4025-98F3-4126E1ADCFD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTracker.UnitTests", "GTracker.tests\GTracker.UnitTests.csproj", "{95C2B8B8-9530-4025-98F3-4126E1ADCFD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTracker.IntegrationTests", "TestProject1\GTracker.IntegrationTests.csproj", "{829F211A-63A8-467A-9011-FC043F854E60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{95C2B8B8-9530-4025-98F3-4126E1ADCFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95C2B8B8-9530-4025-98F3-4126E1ADCFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95C2B8B8-9530-4025-98F3-4126E1ADCFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{829F211A-63A8-467A-9011-FC043F854E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{829F211A-63A8-467A-9011-FC043F854E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{829F211A-63A8-467A-9011-FC043F854E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{829F211A-63A8-467A-9011-FC043F854E60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

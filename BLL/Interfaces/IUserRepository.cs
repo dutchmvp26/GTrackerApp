@@ -12,7 +12,12 @@ namespace BLL.Interfaces
         User? GetUserByUsername(string username);
         void AddUser(User user);
 
+        User? GetUserById(int id);
+
         User? GetUserByEmail(string email);
+
+        void UpdateProfilePicture(int userId, byte[] picture);
+        void RemoveProfilePicture(int userId);
     }
 }
 

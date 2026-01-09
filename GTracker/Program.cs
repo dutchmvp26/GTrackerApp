@@ -6,6 +6,7 @@ namespace GTracker
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,7 @@ namespace GTracker
                 options.Cookie.IsEssential = true; // required for GDPR compliance
             }); 
 
+
             // Get the connection string manually
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -27,7 +29,12 @@ namespace GTracker
             builder.Services.AddScoped<IGameRepository>(provider =>
             new GameRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddScoped<IUserRepository>(sp =>
+            new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
             builder.Services.AddScoped<GameService>();
+            builder.Services.AddScoped<BLL.Services.UserService>();
             builder.Services.AddScoped<IUserRepository>(provider =>
             new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -43,6 +50,17 @@ namespace GTracker
                 app.UseHsts();
             }
 
+            if (app.Environment.IsEnvironment("Testing"))
+            {
+                app.MapGet("/test-login/{userId:int}", (HttpContext ctx, int userId) =>
+                {
+                    ctx.Session.SetInt32("UserId", userId);
+                    ctx.Session.SetString("Username", "test");
+                    return Results.Ok();
+                });
+            }
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -53,5 +71,6 @@ namespace GTracker
             app.MapRazorPages();
             app.Run();
         }
+
     }
 }

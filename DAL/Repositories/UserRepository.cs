@@ -18,6 +18,33 @@ namespace DAL.Repositories
             _connectionString = connectionString;
         }
 
+        public User? GetUserById(int id)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            conn.Open();
+
+            var cmd = new SqlCommand(
+                "SELECT * FROM [User] WHERE ID = @id",
+                conn);
+
+            cmd.Parameters.AddWithValue("@id", id);
+
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read()) return null;
+
+            return new User
+            {
+                ID = (int)reader["ID"],
+                Username = reader["Username"].ToString()!,
+                Email = reader["Email"].ToString()!,
+                PasswordHash = reader["Password"].ToString()!,
+                PFP = reader["PFP"] != DBNull.Value
+                    ? (byte[])reader["PFP"]
+                    : null
+            };
+        }
+
+
         public User? GetUserByUsername(string username)
         {
             using var conn = new SqlConnection(_connectionString);
@@ -71,5 +98,36 @@ namespace DAL.Repositories
             cmd.Parameters.AddWithValue("@password", user.PasswordHash);
             cmd.ExecuteNonQuery();
         }
+
+        public void UpdateProfilePicture(int userId, byte[] picture)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            conn.Open();
+
+            var cmd = new SqlCommand(
+                "UPDATE [User] SET PFP = @pic WHERE ID = @id",
+                conn);
+
+            cmd.Parameters.Add("@pic", System.Data.SqlDbType.VarBinary).Value = picture;
+            cmd.Parameters.AddWithValue("@id", userId);
+
+            cmd.ExecuteNonQuery();
+        }
+
+        public void RemoveProfilePicture(int userId)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            conn.Open();
+
+            var cmd = new SqlCommand(
+                "UPDATE [User] SET PFP = NULL WHERE ID = @id",
+                conn);
+
+            cmd.Parameters.AddWithValue("@id", userId);
+
+            cmd.ExecuteNonQuery();
+        }
+
+
     }
 }
