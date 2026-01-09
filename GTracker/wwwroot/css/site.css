@@ -275,3 +275,37 @@ input {
 .text-muted {
     color: #9dbcd4 !important;
 }
+/* =====================================================
+   Alerts (make Bootstrap alerts match dark theme)
+   ===================================================== */
+
+.alert {
+    background-color: #0d223a !important;
+    color: #e6edf3 !important;
+    border: 1px solid #1c3a5c !important;
+}
+
+    .alert a {
+        color: #74c0fc !important;
+    }
+
+        .alert a:hover {
+            color: #a5d8ff !important;
+        }
+
+/* Specific alert types (optional nicer accents) */
+.alert-warning {
+    border-left: 4px solid #fab005 !important;
+}
+
+.alert-danger {
+    border-left: 4px solid #fa5252 !important;
+}
+
+.alert-success {
+    border-left: 4px solid #2f9e44 !important;
+}
+
+.alert-info {
+    border-left: 4px solid #228be6 !important;
+}
