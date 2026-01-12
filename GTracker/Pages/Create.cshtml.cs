@@ -22,6 +22,8 @@ namespace GTracker.Pages
         [BindProperty]
         public IFormFile? UploadedImage { get; set; }
 
+        public IFormFile? UploadedScreenImage { get; set; }
+
         public IActionResult OnGet()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -30,6 +32,7 @@ namespace GTracker.Pages
                 return RedirectToPage("/Login");
             // set defaults if needed
             NewGame.Status = GameStatus.CurrentlyPlaying;
+
 
             return Page();
         }
@@ -69,6 +72,18 @@ namespace GTracker.Pages
                     using var ms = new MemoryStream();
                     await UploadedImage.CopyToAsync(ms);
                     NewGame.BoxArt = ms.ToArray();
+                }
+                if (UploadedScreenImage != null && UploadedScreenImage.Length > 0)
+                {
+                    using var imageStreamScreen = UploadedScreenImage.OpenReadStream();
+                    using var imageScreen = Image.FromStream(imageStreamScreen);
+
+                    imageStreamScreen.Position = 0;
+
+
+                    using var ms = new MemoryStream();
+                    await UploadedScreenImage.CopyToAsync(ms);
+                    NewGame.Screenshot = ms.ToArray();
                 }
                 _gameService.AddGame(NewGame);
                 return RedirectToPage("./Index");

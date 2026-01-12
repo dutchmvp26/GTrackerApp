@@ -15,21 +15,84 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="NewGame.Platform" class="form-label">Platform</label>
-        <input asp-for="NewGame.Platform" class="form-control" />
+         <label asp-for="NewGame.Platform" class="form-label">Platform</label>
+     <select asp-for="NewGame.Platform" class="form-select">
+     <option value="">-- Select Platform--</option>
+     <option value="Wii">Wii</option>
+     <option value="PC">PC</option>
+     <option value="PS4">PS4</option>
+     <option value="PS5">PS5</option>
+     <option value="GameCube">GameCube</option>
+     <option value="Nintendo 64">Nintendo 64</option>
+     <option value="Virtual Boy">Virtual Boy</option>
+     <option value="Atari 2600">Atari 2600</option>
+     <option value="3DS">3DS</option>
+     <option value="Gameboy">Gameboy</option>
+     <option value="NES">NES</option>
+     <option value="SNES">SNES</option>
+     <option value="PS2">PS2</option>
+     <option value="DS">DS</option>
+     <option value="Switch">Switch</option>
+     <option value="Wii U">Wii U</option>
+     <option value="PSP">PSP</option>
+     </select>
         <span asp-validation-for="NewGame.Platform" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="NewGame.releaseYear" class="form-label">Release Year</label>
-        <input asp-for="NewGame.releaseYear" type="number" class="form-control" min="1950" max="2100" />
+        <input asp-for="NewGame.releaseYear" type="number" class="form-control" min="1960" max="2100" />
         <span asp-validation-for="NewGame.releaseYear" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="NewGame.Genre" class="form-label">Genre</label>
-        <input asp-for="NewGame.Genre" class="form-control" />
-        <span asp-validation-for="NewGame.Genre" class="text-danger"></span>
+    <label asp-for="NewGame.Genre" class="form-label">Genre</label>
+<select asp-for="NewGame.Genre" class="form-select">
+    <option value="">-- Select Genre --</option>
+
+    <option value="Action">Action</option>
+    <option value="Action Adventure">Action Adventure</option>
+    <option value="Adventure">Adventure</option>
+
+    <option value="RPG">RPG</option>
+    <option value="JRPG">JRPG</option>
+    <option value="Action RPG">Action RPG</option>
+    <option value="Tactical RPG">Tactical RPG</option>
+
+    <option value="Platformer">Platformer</option>
+    <option value="2D Platformer">2D Platformer</option>
+    <option value="3D Platformer">3D Platformer</option>
+
+    <option value="Shooter">Shooter</option>
+    <option value="FPS">FPS</option>
+    <option value="TPS">TPS</option>
+
+    <option value="Rhythm">Rhythm</option>
+    <option value="Rhythm Action">Rhythm Action</option>
+
+    <option value="Puzzle">Puzzle</option>
+    <option value="Strategy">Strategy</option>
+    <option value="RTS">RTS</option>
+    <option value="Turn-Based Strategy">Turn-Based Strategy</option>
+
+    <option value="Simulation">Simulation</option>
+    <option value="Life Simulation">Life Simulation</option>
+    <option value="Management">Management</option>
+
+    <option value="Sports">Sports</option>
+    <option value="Racing">Racing</option>
+
+    <option value="Horror">Horror</option>
+    <option value="Survival Horror">Survival Horror</option>
+
+    <option value="Interactive Drama">Interactive Drama</option>
+    <option value="Visual Novel">Visual Novel</option>
+
+    <option value="Episodic Adventure">Episodic Adventure</option>
+    <option value="Indie">Indie</option>
+</select>
+
+     <span asp-validation-for="NewGame.Genre" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
@@ -64,6 +127,36 @@
 
             <small class="form-text text-muted">
                 Choose a new image only if you want to replace the current one
+            </small>
+        </div>
+
+         <div class="mb-3">
+            <label class="form-label">Game Screenshot</label>
+
+            @if (Model.NewGame?.Screenshot != null)
+            {
+
+                <div class="small text-success mb-1">
+                    ✔ An image is already uploaded
+                </div>
+
+                <div class="mb-2">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.NewGame.Screenshot)"
+                         class="img-fluid rounded shadow"
+                         alt="Current Game Screenshot" />
+                    <div class="text-muted small">
+                        Current image (already saved)
+                    </div>
+                </div>
+            }
+
+            <input type="file"
+                   asp-for="UploadedScreenImage"
+                   class="form-control" />
+                    <span asp-validation-for="UploadedScreenImage" class="text-danger"></span>
+
+            <small class="form-text text-muted">
+                Choose a new screenshot only if you want to replace the current one
             </small>
         </div>
 

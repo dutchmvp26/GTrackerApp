@@ -22,10 +22,12 @@
             [BindProperty]
             public IFormFile? UploadedImage { get; set; }
 
+            public IFormFile? UploadedScreenImage { get; set; }
 
 
-            // Load existing game
-            public IActionResult OnGet(int id)
+
+        // Load existing game
+        public IActionResult OnGet(int id)
             {
                 int? userId = HttpContext.Session.GetInt32("UserId");
 
@@ -92,7 +94,19 @@
                         await UploadedImage.CopyToAsync(ms);
                         existingGame.BoxArt = ms.ToArray();
                     }
-                    _gameService.UpdateGame(existingGame);
+                if (UploadedScreenImage != null && UploadedScreenImage.Length > 0)
+                {
+                    using var imageStreamScreen = UploadedScreenImage.OpenReadStream();
+                    using var imageScreen = Image.FromStream(imageStreamScreen);
+
+                    imageStreamScreen.Position = 0;
+
+
+                    using var ms = new MemoryStream();
+                    await UploadedScreenImage.CopyToAsync(ms);
+                    existingGame.Screenshot = ms.ToArray();
+                }
+                _gameService.UpdateGame(existingGame);
                     return RedirectToPage("./Index");
 
                 }

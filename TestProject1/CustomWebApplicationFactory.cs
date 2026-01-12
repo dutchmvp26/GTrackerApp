@@ -20,7 +20,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             var settings = new Dictionary<string, string?>
             {
-                // Change key name to match YOUR appsettings key
                 ["ConnectionStrings:DefaultConnection"] =
                     "Server=TOBYY\\SQLEXPRESS01;Database=dbi559954_gametracketest;Trusted_Connection=True;TrustServerCertificate=True;"
             };
@@ -29,3 +28,4 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         });
     }
 }
+    

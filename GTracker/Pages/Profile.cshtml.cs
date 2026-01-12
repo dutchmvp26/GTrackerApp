@@ -17,7 +17,7 @@ namespace GTracker.Pages
 
         public User? User { get; set; }
 
-        [BindProperty]
+        [BindProperty] 
         public IFormFile? UploadedImage { get; set; }
 
         public IActionResult OnGet()

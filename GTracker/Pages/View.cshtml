@@ -31,6 +31,8 @@
                 <p class="text-muted">No notes added for this game.</p>
             }
 
+            <h5 class="mt-4">Box Art</h5>
+
             @if (Model.Game?.BoxArt != null && Model.Game.BoxArt.Length > 0)
             {
                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Game.BoxArt)"
@@ -41,6 +43,19 @@
             else
             {
                 <p class="text-muted">No box art uploaded.</p>
+            }
+
+            <h5 class="mt-4">Screenshot</h5>
+
+            @if (Model.Game?.Screenshot != null && Model.Game.Screenshot.Length > 0)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Game.Screenshot)"
+                     class="img-fluid rounded shadow"
+                     alt="Game Screenshot" />
+            }
+            else
+            {
+                <p class="text-muted">No screenshot uploaded.</p>
             }
 
             <div class="mt-3">

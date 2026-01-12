@@ -42,6 +42,7 @@ namespace DAL.Repositories
                             releaseYear = reader["ReleaseYear"] != DBNull.Value ? Convert.ToInt32(reader["ReleaseYear"]) : 0,
                             Genre = reader["Genre"]?.ToString(),
                             BoxArt = reader["BoxArt"] != DBNull.Value ? (byte[])reader["BoxArt"] : null,
+                            Screenshot = reader["Screenshot"] != DBNull.Value ? (byte[])reader["Screenshot"] : null,
                             Platform = reader["Platform"]?.ToString() ?? "Unknown",
                             Status = status,
                             IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
@@ -77,7 +78,8 @@ namespace DAL.Repositories
                 g.Status,
                 g.Notes,
                 g.AddedByUserID,
-                g.BoxArt,   
+                g.BoxArt,
+                g.Screenshot,
 
                 -- Rating fields
                 r.Id AS RatingId,
@@ -110,10 +112,8 @@ namespace DAL.Repositories
                                 Status = status,
                                 Notes = reader["Notes"].ToString(),
                                 AddedByUserID = userId,
-
-                                BoxArt = reader["BoxArt"] != DBNull.Value
-                                ? (byte[])reader["BoxArt"]
-                                : null
+                                BoxArt = reader["BoxArt"] != DBNull.Value  ? (byte[])reader["BoxArt"] : null,
+                                Screenshot = reader["Screenshot"] != DBNull.Value ? (byte[])reader["Screenshot"] : null
                             };
 
                             // ⭐ Build Rating object (if found)
@@ -167,6 +167,7 @@ namespace DAL.Repositories
                             releaseYear = reader["ReleaseYear"] != DBNull.Value ? Convert.ToInt32(reader["ReleaseYear"]) : 0,
                             Genre = reader["Genre"]?.ToString(),
                             BoxArt = reader["BoxArt"] != DBNull.Value ? (byte[])reader["BoxArt"] : null,
+                            Screenshot = reader["Screenshot"] != DBNull.Value ? (byte[])reader["Screenshot"] : null,
                             Platform = reader["Platform"]?.ToString() ?? "Unknown",
                             Status = status,
                             IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
@@ -290,13 +291,14 @@ namespace DAL.Repositories
                 conn.Open();
 
                 using (var cmd = new SqlCommand(@"
-                    INSERT INTO Game (Title, ReleaseYear, Genre, BoxArt, Platform, Status, IsCustom, AddedByUserID, Notes)
-                    VALUES (@title, @year, @genre, @boxArt, @platform, @status, @isCustom, @addedBy, @notes)", conn))
+                    INSERT INTO Game (Title, ReleaseYear, Genre, BoxArt, Screenshot, Platform, Status, IsCustom, AddedByUserID, Notes)
+                    VALUES (@title, @year, @genre, @boxArt, @screenShot, @platform, @status, @isCustom, @addedBy, @notes)", conn))
                 {
                     cmd.Parameters.AddWithValue("@title", game.Title);
                     cmd.Parameters.AddWithValue("@year", game.releaseYear);
                     cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
                     cmd.Parameters.Add("@boxArt", SqlDbType.VarBinary).Value = (object)game.BoxArt ?? DBNull.Value;
+                    cmd.Parameters.Add("@screenShot", SqlDbType.VarBinary).Value = (object)game.Screenshot ?? DBNull.Value;
                     cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
@@ -319,6 +321,7 @@ namespace DAL.Repositories
                         ReleaseYear = @year,
                         Genre = @genre,
                         BoxArt = @boxArt,
+                        ScreenShot = @screenShot,
                         Platform = @platform,
                         Status = @status,
                         IsCustom = @isCustom,
@@ -331,6 +334,7 @@ namespace DAL.Repositories
                     cmd.Parameters.AddWithValue("@year", game.releaseYear);
                     cmd.Parameters.AddWithValue("@genre", (object?)game.Genre ?? DBNull.Value);
                     cmd.Parameters.Add("@boxArt", SqlDbType.VarBinary).Value = (object)game.BoxArt ?? DBNull.Value;
+                    cmd.Parameters.Add("@screenShot", SqlDbType.VarBinary).Value = (object)game.Screenshot ?? DBNull.Value;
                     cmd.Parameters.AddWithValue("@platform", (object?)game.Platform ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", game.Status.ToString());
                     cmd.Parameters.AddWithValue("@isCustom", game.IsCustom);
@@ -349,22 +353,42 @@ namespace DAL.Repositories
             {
                 connection.Open();
 
-                var query = "SELECT * FROM Game WHERE AddedByUserID = @uid";
+                var query = @"
+            SELECT
+                g.Id,
+                g.Title,
+                g.Genre,
+                g.Platform,
+                g.ReleaseYear,
+                g.Status,
+                g.BoxArt,
+                g.Screenshot,
+                g.Notes,
+                g.IsCustom,
+                g.AddedByUserID,
+
+                r.Id AS RatingId,
+                r.Stars AS RatingValue
+            FROM Game g
+            LEFT JOIN Rating r
+                ON r.GameId = g.Id AND r.UserId = @uid
+            WHERE g.AddedByUserID = @uid
+        ";
 
                 if (!string.IsNullOrWhiteSpace(title))
-                    query += " AND Title LIKE @title";
+                    query += " AND g.Title LIKE @title";
 
                 if (releaseYear.HasValue)
-                    query += " AND ReleaseYear = @releaseYear";
+                    query += " AND g.ReleaseYear = @releaseYear";
 
                 if (!string.IsNullOrWhiteSpace(genre))
-                    query += " AND Genre LIKE @genre";
+                    query += " AND g.Genre LIKE @genre";
 
                 if (!string.IsNullOrWhiteSpace(platform))
-                    query += " AND Platform LIKE @platform";
+                    query += " AND g.Platform LIKE @platform";
 
                 if (status.HasValue)
-                    query += " AND Status = @status";
+                    query += " AND g.Status = @status";
 
                 using (var cmd = new SqlCommand(query, connection))
                 {
@@ -391,24 +415,48 @@ namespace DAL.Repositories
                         {
                             var statusRaw = reader["Status"]?.ToString() ?? "";
                             var parsedStatus = Enum.TryParse<GameStatus>(statusRaw, true, out var gameStatus)
-                                ? gameStatus : GameStatus.CurrentlyPlaying;
+                                ? gameStatus
+                                : GameStatus.CurrentlyPlaying;
 
-                            games.Add(new Game
+                            var game = new Game
                             {
                                 Id = (int)reader["Id"],
-                                Title = reader["Title"].ToString(),
-                                Genre = reader["Genre"].ToString(),
-                                Platform = reader["Platform"].ToString(),
-                                releaseYear = (int)reader["ReleaseYear"],
-                                Status = parsedStatus
-                            });
-                        }
+                                Title = reader["Title"]?.ToString() ?? "",
+                                Genre = reader["Genre"]?.ToString(),
+                                Platform = reader["Platform"]?.ToString() ?? "Unknown",
+                                releaseYear = reader["ReleaseYear"] != DBNull.Value ? (int)reader["ReleaseYear"] : 0,
+                                Status = parsedStatus,
+                                Notes = reader["Notes"]?.ToString(),
+                                BoxArt = reader["BoxArt"] as byte[],
+                                Screenshot = reader["Screenshot"] as byte[],
+                                AddedByUserID = reader["AddedByUserID"] != DBNull.Value ? (int)reader["AddedByUserID"] : (int?)null,
+                                IsCustom = reader["IsCustom"] != DBNull.Value && (bool)reader["IsCustom"],
+                            };
 
+                            // ⭐ attach rating if present
+                            if (reader["RatingId"] != DBNull.Value)
+                            {
+                                game.Stars = new Rating
+                                {
+                                    Id = Convert.ToInt32(reader["RatingId"]),
+                                    UserId = userId,
+                                    GameId = game.Id,
+                                    Stars = Convert.ToInt32(reader["RatingValue"])
+                                };
+                            }
+                            else
+                            {
+                                game.Stars = null;
+                            }
+
+                            games.Add(game);
+                        }
                     }
                 }
             }
 
             return games;
         }
+
     }
 }
