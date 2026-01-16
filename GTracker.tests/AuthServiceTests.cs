@@ -46,8 +46,10 @@ namespace GTracker.tests
                 .Returns(fakeUser);
 
             var authService = new AuthService(usermockRepo.Object);
+
             // Act
             var result = authService.Login(username, password);
+
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(username, result.Username);

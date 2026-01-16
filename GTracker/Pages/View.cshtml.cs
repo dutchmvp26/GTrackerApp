@@ -16,22 +16,20 @@ namespace GTracker.Pages
 
         public Game? Game { get; set; }
 
-        public IActionResult OnGet(int id)
-        {
-            int? userId = HttpContext.Session.GetInt32("UserId");
+                public IActionResult OnGet(int id)
+                {
+                    int? userId = HttpContext.Session.GetInt32("UserId");
 
-            if (userId == null)
-                return RedirectToPage("/Login");
+                    if (userId == null)
+                        return RedirectToPage("/Login");
 
-            var allGames = _gameService.GetAllGames();
-            Game = allGames.FirstOrDefault(g => g.Id == id);
+                    var game = _gameService.GetGameById(id);
+                    if (game == null || game.AddedByUserID != userId.Value)
+                        return RedirectToPage("/Index");
 
-            if (Game == null)
-            {
-                return RedirectToPage("/Index");
-            }
+                    Game = game;
 
-            return Page();
+                    return Page();
+                }
         }
     }
-}

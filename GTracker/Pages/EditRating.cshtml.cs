@@ -27,32 +27,34 @@ namespace GTracker.Pages
 
         public IActionResult OnGet(int gameId, int? ratingId)
         {
-
             int? userId = HttpContext.Session.GetInt32("UserId");
-
             if (userId == null)
-                return RedirectToPage("/Login");
-
-            var allGames = _gameService.GetAllGames();
+            {
+                return RedirectToPage("/Index");
+            }
 
             if (!ratingId.HasValue)
             {
                 return RedirectToPage("/Index");
             }
-            Rating = _gameService.GetRatingById(ratingId.Value);
 
-            Game = allGames.FirstOrDefault(g => g.Id == gameId);
-
-            if (Game == null)
+            var game = _gameService.GetGameById(gameId);
+            if (game == null || game.AddedByUserID != userId.Value)
             {
                 return RedirectToPage("/Index");
             }
-            Rating = _gameService.GetRatingById(ratingId.Value);
+
+            var rating = _gameService.GetRatingById(ratingId.Value);
+            if (rating == null)
+            {
+                return RedirectToPage("/Index");
+            }
+
+            Game = game;
+            Rating = rating;
 
             return Page();
-
         }
-
 
         public IActionResult OnPost()
         {

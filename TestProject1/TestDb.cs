@@ -46,5 +46,28 @@ public static class TestDb
 
         return (int)cmd.ExecuteScalar();
     }
+
+    public static int InsertGame(int addedByUserId, string title = "Test Game", string platform = "PC")
+    {
+        using var conn = new SqlConnection(Conn);
+        conn.Open();
+
+        using var cmd = new SqlCommand(@"
+        INSERT INTO dbo.Game (Title, ReleaseYear, Genre, BoxArt, Screenshot, Platform, Status, IsCustom, AddedByUserID, Notes)
+        OUTPUT INSERTED.Id
+        VALUES (@title, @year, @genre, NULL, NULL, @platform, @status, @isCustom, @addedBy, NULL);
+    ", conn);
+
+        cmd.Parameters.AddWithValue("@title", title);
+        cmd.Parameters.AddWithValue("@year", 2024);
+        cmd.Parameters.AddWithValue("@genre", DBNull.Value);
+        cmd.Parameters.AddWithValue("@platform", platform);
+        cmd.Parameters.AddWithValue("@status", "Wishlist");
+        cmd.Parameters.AddWithValue("@isCustom", true);
+        cmd.Parameters.AddWithValue("@addedBy", addedByUserId);
+
+        return (int)cmd.ExecuteScalar();
+    }
+
 }
 

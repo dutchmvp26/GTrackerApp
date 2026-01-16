@@ -32,9 +32,9 @@
                 }
 
                 Game = _gameService.GetGameById(id);
-                if (Game == null)
+               if (Game == null || Game.AddedByUserID != userId.Value)
                 {
-                    return RedirectToPage("/Index", new { error = $"Game not found for ID {id}." });
+                return RedirectToPage("/Index");
                 }
 
                 Rating.GameId = id;

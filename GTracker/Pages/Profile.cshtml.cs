@@ -26,9 +26,11 @@ namespace GTracker.Pages
             if (userId == null)
                 return RedirectToPage("/Login");
 
-            User = _userService.GetUserById(userId.Value);
-            if (User == null)
+            var user = _userService.GetUserById(userId.Value);
+            if (user == null)
                 return RedirectToPage("/Login");
+
+            User = user;
 
             return Page();
         }
@@ -38,6 +40,11 @@ namespace GTracker.Pages
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
                 return RedirectToPage("/Login");
+
+            var user = _userService.GetUserById(userId.Value);
+            if (user == null)
+                return RedirectToPage("/Login");
+
 
             if (UploadedImage == null || UploadedImage.Length == 0)
             {
@@ -78,7 +85,7 @@ namespace GTracker.Pages
             }
         }
 
-        // Optional: matches a button like formaction="?handler=Remove"
+        
         public IActionResult OnPostRemove()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");

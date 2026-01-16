@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace GTracker.tests
 {
     [TestClass]
-    public class GameServiceTests
+    public class GameServiceUnitTests
     {
         //Test 3
         [TestMethod]
@@ -42,7 +42,7 @@ namespace GTracker.tests
 
             // Act
 
-            service.DeleteGame(2);
+            service.DeleteGame(2, 1);
 
 
             // Assert

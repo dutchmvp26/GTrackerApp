@@ -19,20 +19,32 @@ namespace GTracker.Pages
 
         public IActionResult OnGet(int id)
         {
-            var allGames = _gameService.GetAllGames();
-            GameToDelete = allGames.FirstOrDefault(g => g.Id == id);
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToPage("/Login");
 
-            if (GameToDelete == null)
+            var game = _gameService.GetGameById(id);
+            if (game == null || game.AddedByUserID != userId.Value)
                 return RedirectToPage("/Index");
+
+            GameToDelete = game;
 
             return Page();
         }
 
+
         public IActionResult OnPost(int id)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToPage("/Login");
             try
             {
-                _gameService.DeleteGame(id);
+                _gameService.DeleteGame(id, userId.Value);
+                return RedirectToPage("/Index");
+            }
+            catch (UnauthorizedAccessException)
+            {
                 return RedirectToPage("/Index");
             }
             catch (Exception ex)

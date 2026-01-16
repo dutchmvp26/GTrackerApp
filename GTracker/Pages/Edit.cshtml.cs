@@ -34,11 +34,13 @@
                 if (userId == null)
                     return RedirectToPage("/Login");
 
-                Game = _gameService.GetGameById(id);
-                if (Game == null)
-                    return RedirectToPage("/Index");
+            var game = _gameService.GetGameById(id);
+            if (game == null || game.AddedByUserID != userId.Value)
+                return RedirectToPage("/Index");
 
-                return Page();
+             Game = game;
+
+            return Page();
             }
 
 

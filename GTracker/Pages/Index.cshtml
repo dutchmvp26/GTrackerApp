@@ -33,7 +33,7 @@
             <input type="text" id="Platform" name="Platform" value="@Model.Platform" class="form-control" />
         </div>
 
-        <!-- ✅ NEW: Status dropdown -->
+   
         <div class="col-md-2">
             <label for="Status" class="form-label">Status</label>
             <select id="Status" name="Status" class="form-select">
@@ -55,7 +55,7 @@
 </form>
 
 
-<!-- 🎮 GAME LIST -->
+
 @if (Model.Games != null && Model.Games.Count > 0)
 {
     <table>
@@ -124,7 +124,7 @@
                         {
                             <a asp-page="/Rating"
                                asp-route-id="@g.Id"
-                               class="btn btn-success">
+                               class="btn btn-sm btn-success">
                                 Add Rating
                             </a>
                         }
@@ -133,7 +133,7 @@
                             <a asp-page="/EditRating"
                                asp-route-gameId="@g.Id"
                                asp-route-ratingId="@g.Stars.Id"
-                               class="btn btn-warning">
+                               class="btn btn-sm btn-warning">
                                 Edit Rating
                             </a>
                         }

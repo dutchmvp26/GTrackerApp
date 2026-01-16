@@ -22,10 +22,17 @@
         }
         public List<Game> GetAllGames() => _repo.GetAllGames();
 
-        public void DeleteGame(int gameId)
+        public void DeleteGame(int gameId, int userId)
         {
             if (gameId <= 0)
                 throw new ArgumentException("Invalid game ID.");
+
+            var game = _repo.GetGameById(gameId);
+            if (game == null)
+                throw new ArgumentException("Game ID does not exist.");
+
+            if (game.AddedByUserID == null || game.AddedByUserID.Value != userId)
+                throw new UnauthorizedAccessException("You are not allowed to delete this game.");
 
             _repo.DeleteGame(gameId);
             }
